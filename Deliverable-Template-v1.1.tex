@@ -1,0 +1,128 @@
+\documentclass[11pt,a4paper,twoside]{report}
+
+%%%% Packages
+\usepackage{a4wide}
+\usepackage{graphicx}
+\usepackage{lmodern}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\graphicspath{{../../../pictures/logos/}{.}}
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% Definitions -- TO BE UPDATED FOR EACH DELIVERABLE
+%
+\newcommand{\wpnumber}{WP X}
+
+\newcommand{\delnumber}{DX.X}
+\newcommand{\deltitle}{Title of the deliverable}
+\newcommand{\delversion}{1.0}
+
+\newcommand{\deldate}{January 31st, 2013}
+\newcommand{\delnature}{Report}
+\newcommand{\delpublic}{Public}
+
+\newcommand{\delauthors}{Author 1 (Institution) \newline
+                         Author 2 (Institution)}
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% Project-wide definitions
+%
+\newcommand{\grantnumber}{288533}
+\newcommand{\projectacronym}{ROBOHOW.COG}
+\newcommand{\projecttitle}{Web-enabled and Experience-based Cognitive Robots
+                           that Learn Complex Everyday Manipulation Tasks}
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% Page headers and title page (do not edit!)
+
+% \titleformat*{\chapter}{\Large\sffamily}
+\titleformat{\chapter}[display]{\bfseries\Huge}{\Huge Chapter \thechapter}{1ex}{}
+\titleformat*{\section}{\Large\sffamily}
+
+% page headers
+\pagestyle{fancy}
+\setlength{\headheight}{14pt}
+\lhead{\sffamily\delnumber}
+\chead{\sffamily FP7-ICT-\grantnumber \ \projectacronym}
+\rhead{\sffamily\today}
+
+
+\begin{document}
+\sffamily
+
+% title page
+\begin{titlepage}
+
+  \begin{center}
+  %  \includegraphics[width=8cm]{logo-robohow.pdf}
+  %  \\[3cm]
+    \textbf{
+    \textsf{\huge  ICT Call 7}\\[0.5cm]
+    \textsf{\huge \projectacronym}\\[0.5cm]
+    \textsf{\huge FP7-ICT-\grantnumber}\\[2cm]
+    \textsf{\Large Deliverable \delnumber :}\\[0.5cm]
+    \textsf{\Large \deltitle}}\\[3cm]
+  \begin{figure}[h!]
+  \centering
+  %\includegraphics[width=5cm]{logo-FP7.pdf}
+  \end{figure}
+  \vfill
+  \textbf{\textsf{\large \today}}
+  \end{center}
+\end{titlepage}
+
+% page 2
+\begin{center}
+\begin{tabular}{ p{0.3\textwidth} p{0.6\textwidth} }
+  Project acronym:      & \projectacronym\\
+  Project full title:   & \projecttitle\\
+  \\
+  Work Package:         & \wpnumber  \\
+  Document number:      & \delnumber \\
+  Document title:       & \deltitle  \\
+  Version:              & \delversion\\
+  \\
+  Delivery date:        & \deldate\\
+  Nature:               & \delnature\\
+  Dissemination level:  & \delpublic \\
+  \\
+  Authors: & \delauthors\\
+
+\end{tabular}
+\end{center}
+
+\flushleft
+The research leading to these results has received funding from the European 
+Union Seventh Framework Programme FP7/2007-2013 under grant agreement
+n$^\textrm{o}$\grantnumber \ \projectacronym.
+
+\tableofcontents
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+
+
+
+
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% START EDITING HERE
+
+\chapter*{Summary}
+Summary....
+
+
+\chapter{Chapter-Title}
+
+\section{Section 1.1}
+
+\section{Section 1.2}
+
+
+\end{document} 

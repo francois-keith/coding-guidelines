@@ -1,0 +1,155 @@
+\pagebreak
+\section{ROS guidelines}
+
+The following rules are a copy of the slides created by Lorenz M\"osenlechner \footnote{\url{https://robohow.org/_media/meetings/first-integration-workshop/ros-best-practices.pdf}}.\\
+
+The ROS libraries are by default installed in the /opt/ros folder. 
+\textbf{Never} edit those files. Prefer using ROS overlays \footnote{\url{http://www.ros.org/wiki/fuerte/Installation/Overlays}} instead.
+Use the tool support \textit{rosws} to create, modify and manage overlays.
+Multiple overlays with different versions can exist in parallel, e.g.:
+\begin{itemize}
+\item Overlay for development.
+\item Overlay for demos.
+\item Overlay for experimenting with bleeding edge code of other people.
+\end{itemize}
+
+\subsection{ROS Overlays}
+\paragraph{Creation}
+The creation of an overlay with rosws is realized as follows:
+\begin{verbatim}
+sudo pip install rosinstall #Install rosws
+rosws init ~/fuerte /opt/ros/fuerte # Create a new overlay
+# Load the created file setup.bash in .bashrc (optional)
+# echo "source ~/fuerte/setup.bash" >> ~/.bashrc 
+\end{verbatim}
+
+\paragraph{Add packages}
+To add a local directory (e.g. a sandbox for experimental packages), do:
+\begin{verbatim}
+mkdir ~/fuerte/sandbox
+rosws set ~/fuerte/sandbox
+\end{verbatim}
+
+\paragraph{Installation}
+Install packages from a rosinstall file:
+\begin{verbatim}
+rosws merge robohow-cram.rosinstall
+rosws update
+\end{verbatim}
+Install a (released) stack from source:
+\begin{verbatim}
+roslocate info turtlebot | rosws merge -
+rosws update
+\end{verbatim}
+
+The rosinstall files correspond to a YAML description of repositories to install.
+They are ideal for repository snap shots and collaboration, and enable to specify versions, e.g:
+\begin{verbatim}
+- git:
+   local-name: cram_pl
+   uri: http://code.in.tum.de/git/cram-pl.git
+   version: 0.1.5
+- svn:
+   local-name: knowrob
+   uri: http://code.in.tum.de/pubsvn/knowrob/tags/latest
+\end{verbatim}
+
+
+\subsection{Naming Conventions}
+\paragraph{File names}
+\begin{itemize}
+\item Package names are lower case.
+\item Packages and stacks must not contain dashes (“-”), only underscores (“$\_$”).
+\item Messages, services and actions are named in camel case:
+\begin{tt}geometry\_msgs/PoseStamped \end{tt}
+\item Do not use the word “action” in an action definition (e.g.: Foo.action, not FooAction.action).
+\end{itemize}
+
+\paragraph{Topics, parameters, actions, services}
+\begin{itemize}[noitemsep]
+\item Nodes, topics, services, actions, parameters are all lower case with underscores as separator.
+\item Never use global names, always node local topic, service, action and parameter names. 
+\item Use ros::NodeHandle handle("\textasciitilde")\\
+\begin{tabular}{ll}
+\textbf{Bad} & \textbf{Good}\\
+ros::NodeHandle nh();         & ros::NodeHandle nh("\textasciitilde");\\
+nh.advertise$<$Foo$>$("foo", 10); & nh.advertise$<$Foo$>$("foo", 10);\\
+Topics: $\rightarrow$ /foo &
+Topics: $\rightarrow$ /node\_name/foo
+\end{tabular}
+\end{itemize}
+
+
+\subsection{Best Practices}
+\paragraph{Topics vs. Services vs. Actions\\}
+\begin{itemize}
+\item Use \textit{topics} for publishing continuous streams of data, e.g. sensor data, continuous detection results, . . .\\
+\item Use \textit{services} only for short calculations.\\
+\item Use \textit{actions} for all longer running processes, e.g. grasping, navigation, perception, . . .
+\end{itemize}
+
+
+\paragraph{ROS package}
+\begin{itemize}
+\item ROS packages are cheap, create many.
+\item One package per functionality.
+\item Create separate packages that contain only messages, services and
+actions (separation of interface and implementation).
+\begin{itemize}
+\item Keep your dependencies clean:
+\item only depend on what you need
+\item specify all dependencies 
+\item do not use implicit dependencies
+\end{itemize}
+\item Provide launch files.
+\item Group packages in stacks.
+\end{itemize}
+
+
+\paragraph{Misc}
+\begin{itemize}
+\item Use standard data types when possible.
+\item Do not define matrix data types for transforms but use geometry\_msgs/PoseStamped.
+\item Do not require a specific startup order for nodes: use \begin{tt}waitForService\end{tt}, \begin{tt}waitForTransform\end{tt}, \begin{tt}waitForServer\end{tt}, . . .
+\item Use ros::Time, ros::Duration and ros::Rate instead of system time.
+\item Do not use command line parameters but the ROS parameter server.
+\item Use rosconsole utilities for logging (ROS\_INFO, ROS\_DEBUG, \ldots).
+\item Never call cmake by hand in a package!
+\end{itemize}
+
+
+\subsection{Third Party Libraries}
+\begin{itemize}
+\item If possible, try to use libraries from Debian packages.
+\item Specify rosdep dependencies (tool for installing system packages).
+\item If you need to compile a library from source create a ROS wrapper
+package that downloads and compiles the package.
+\item Don't use sudo in wrapper packages.
+\item Don't require manual system wide installations.
+\item Don't copy libraries into packages that need them.
+\end{itemize}
+
+
+\subsection{Collaboration}
+% Use version control systems (e.g. git or svn)
+% Create tags for stable versions that others can use.
+\begin{itemize}
+\item Provide a rosinstall file.
+\item Create a short Wiki page for each package:
+\item Document what the node does.
+\item Document topics, services and actions that are required and
+provided.
+\item Document ROS parameters and their default values.
+\item Data can be recorded and exchanged using bag files.
+\end{itemize}
+
+\subsection{ROS Bag Files}
+%\note{definition of a ros bag}
+Recording of a bag:
+\begin{tt}rosbag record <topic> <topic> ...\end{tt}\\
+Play a bag:
+\begin{tt}rosbag play foo.bag\end{tt}\\
+Play a bag using recorded time (important when stamped data and
+TF was recorded):\\
+\begin{tt}rosbag play --clock foo.bag\end{tt}
+

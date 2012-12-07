@@ -1,0 +1,53 @@
+\documentclass{article}
+
+\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{times} % assumes new font selection scheme installed
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{amssymb}  % assumes amsmath package installed
+\usepackage{color}  % assumes amsmath package installed
+\usepackage[pdftex]{hyperref}
+
+
+%% File: formatting-instruction.tex
+%\documentclass[letterpaper]{article}
+%\usepackage{aaai}
+%\usepackage{times}
+%\usepackage{helvet}
+%\usepackage{courier}
+%\usepackage{graphicx}      % include this line if your document contains figures
+%\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{url}
+\usepackage{ulem}
+
+\usepackage{enumitem}
+
+\def\bi{\begin{itemize}}
+\def\ei{\end{itemize}}
+
+%\def\vb{\begin{verbatim}}
+%\def\ve{\end{verbatim}}
+
+\definecolor{darkBlue}{rgb}{0,0,0.5}
+\definecolor{purple}{rgb}{0.5,0,0.5}
+%\definecolor{pink}{rgb}{0.8,0,0.8}
+\newcommand{\iobj}[1]{\item \textsuperscript{\textcolor{purple}{obj#1}}}
+\newcommand{\iobjr}[1]{\item \textsuperscript{\textcolor{magenta}{obj#1}}}
+\newcommand{\iredac}[1]{\item \textsuperscript{\textcolor{darkBlue}{redac#1}}}
+\newcommand{\icode}[1]{\item \textcolor{red}{\textsuperscript{code:#1}}}
+\newcommand{\tested}[2]{\sout{#1}~\textcolor{red}{#2}}
+\newcommand{\note}[1]{\textcolor{red}{#1}}
+
+ 
+\begin{document}
+
+\title{Development guidelines}
+\maketitle
+\tableofcontents
+
+\pagebreak
+
+\input{general-guidelines}
+\input{git-guidelines}
+\input{ros-guidelines}
+\input{cpp-guidelines}
+\end{document}

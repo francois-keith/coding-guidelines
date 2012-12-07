@@ -1,0 +1,121 @@
+This document will details some rules for future developed code.
+Keep in mind that the code will be read by humans and will be eventually modified by them (you're maybe not the last one to use it). 
+It must be readable, understandable and reusable.\\
+
+The most important rule about coding is the \textbf{consistency}.
+Hence, a project already has its own format, do not impose yours, and try to adapt yourself.
+There are several reasons for that:
+\begin{itemize}
+\item Correcting everything will take you a long time that you may not have
+\item If you are a visitor/occasional developer of a package, you may signal to the main developers that some rules have been broken. But don't do it by yourself, temporarily mixing two coding styles is not a good thing to do.
+\end{itemize}
+Prefer asserting the consistency inside one package rather than the consistency inside the whole project.
+However, if you are creating a new package, please follow those coding guidelines.
+
+\section{General guidelines}
+\begin{itemize}
+\item Ensure the consistency of each project (this is \textit{that} important).
+\item Maintain the documentation up-to-date (use doxygen, sphinx...), and make your code understandable.
+\item Make the validation of the code easier by adding unit-tests.
+\item Use versioning tools (git or svn, depending on the type of data), tag versions that works and release often.
+\item Keep the code clean. Remove useless and dead code, (especially if it is versioned).
+\item Do not neglect debugging tools (e.g. make the debug easier by using assertion (C++)).
+\end{itemize}
+
+\subsection{General shape of package}
+A package should at least contain the following elements:
+%The general shape of a package is as follow:
+%General shape of packages (like, a Readme, folder structure - include - src ...)
+\paragraph{Readme.md}
+The readme.md file is the first file a newcomer will consult. 
+It should define all the informations relative to the project:
+\begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
+\item The purpose of the package.
+\item The use/compilation informations: on which OS does it work? What are the dependencies of the project (with the version if it matters).
+\item The related papers.
+\item The origin of the sources, and the project management web application (github, redmine \ldots) 
+\end{itemize}
+
+\paragraph{Authors}
+The list of contributing authors can be added at the top of each files.
+The order to keep is the alphabetical order of last name, then first name.
+
+Since this can be a daunting task, an alternative is to define an AUTHOR file in the root directory of your package, in which you can indicate the corresponding(s) author(s) and list all the contributors and a summed up detail of their contribution.\\
+
+\paragraph{Copyright}
+The full text statements of all licenses used in the project should be placed in the LICENSES directory at the top of the repository.
+If you add a package under a license that is not included in LICENSES, add the license statement.
+
+The code developed in the frame of the robohow project should be open source.
+The licenses used in this purpose are the following ones (from the more restrictive to the least one).
+\begin{itemize}
+\item GPL\footnote{\url{http://www.gnu.org/licenses/gpl.html}}, permits the use of the library only for free programs.
+\item LGPL\footnote{\url{http://www.gnu.org/copyleft/lesser.html}} permits the use of the library in proprietary programs.
+\item BSD \footnote{\url{http://opensource.org/licenses/BSD-3-Clause}}
+\end{itemize}
+
+% According to ROS guidelines\url{http://www.ros.org/wiki/DevelopersGuide}
+
+\subsection{Clarify and document your code}
+Keep in mind that your code will be read, reused and (eventually) improved by humans.
+You want them to use wisely your code, and you don't have the time to help each of them personally.
+
+Write the documentation at the same time as the code. 
+Detail the how of your code, but don't forget the why. 
+Knowing the goal of your code will help one to detect/correct wrong behavior.
+
+Do not hesitate to detail any specific or unusual implementation
+(e.g. the use of the specific structure of a sparse matrix to gain computation time).
+Similarly, document your variables: units, specific bounds, legal values and give them \textit{explicit} names (avoid tmp or random sequence of letters).	
+
+Please refer the articles corresponding to the code, \textit{especially} if the notations come from it.
+
+Yet, do not overload your code by documenting the obvious. This can be avoided:\\
+\begin{tt} i+=1 //increase the index value of 1\end{tt}
+
+\subsection{Test a lot}
+Testing is the easiest way to check the behavior and good health of your code through its evolution.
+It allows to find what (and who) is responsible for a wrong behavior.
+Also, it can also be of help to understand the code.
+
+The sooner the tests are added to the project, the easier it is to debug it.
+Similarly, the more automatized it is, the better.
+\begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
+\item Do unit tests (verifies the behavior of the code)
+\item Do regression tests (verifies that the behavior of the code do not change with the evolution of the code)
+\item Do computation time tests to find bottleneck in your code (e.g. use callgrind in C++ )
+\item Do memory handling tests (valgrind).
+\end{itemize}
+
+Automatize your tests using cTest or gtest\url{http://www.ros.org/wiki/gtest}.
+
+\subsection{Bug tracking - bug report}
+Eventually, you'll encounter some issues using code developed by someone else.\\
+Do not hesitate to report an issue, and to signal the issue in the code with a TODO.\\
+Please be explicit when you report an issue, and define the following informations:
+your goal (maybe there is another/safer way to do what you're trying to do), 
+your OS (32 bits/64 bits), your version of ROS, the version of the packages you are using...\\
+
+Prefer opening a ticket on the project management web application associated to the package, than contacting directly the responsible of the code. 
+You might not be only one to encounter the problem and the resulting discussion might help someone else.\\
+
+Help the developers to reproduce the bug, e.g. by creating a branch corresponding to your problem.
+
+%\note{voir la liste des choses à ne pas faire pour plus de détails}
+
+
+\subsection{Feature request}
+Similarly to the bug report, prefer opening tickets on the corresponding web-site.
+You can help someone by doing this, especially when there are reasons not to implement the proposed feature.
+
+\subsection{Deprecation}
+As soon as there are users of your code, you have a responsibility not to pull the rug out from under them with sudden breaking changes. 
+Instead, use a process of deprecation, which means marking a feature or component as being no longer supported, with a schedule for its removal. Give users time to adapt, which is usually one release cycle, then do the removal.
+
+%Deprecation can happen at multiple levels, including:
+%
+%\begin{verbatim}
+%
+%API features : Say you want to remove a method call from a library. First mark it as deprecated in the API documentation; with DOxgyen, use @deprecated. If the language supports it, also mark the code as being deprecated; in C/C++, use __attribute__ ((deprecated)). In the next release, note the deprecation in the ChangeList, with the future release at which you expect to remove it; if it's a widely used feature, make the deprecation notice prominent, and explain the reasoning behind it. In that future release, remove it.
+%Packages : Say you want to remove a package. Mark it as deprecated in the Wiki documentation (e.g., put DEPRECATED at the top), with a note as to when you expect to remove it. Include notice of the deprecation in the ChangeList with the next (stack) release. If it's a widely used package, you should also send mail to your users giving them as much advance warning as possible.
+%\end{verbatim}

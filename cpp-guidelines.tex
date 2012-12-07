@@ -1,0 +1,243 @@
+
+
+\pagebreak
+\section{Code guidelines}
+
+%For each of the following langage, I may invite the reader to follow an existing guidelines, in which case I will briefly sum the most important do and don't rules.
+%Also, I propose to add some exceptions / tolerated elements.
+
+The integration in ROS is one possible objective of the code.
+As a result,  the first guidelines proposed are those of ROS.
+However, please be aware that this integration is not mandatory: one can wants its code to be used outside of the ROS framework and independently from any middleware.
+
+%However, keep in mind maintaining that the consistency of code style in each package has priority above all other consideration.
+%Follow this guide whenever possible, e.g. when creating a new package, but if you are editing a package written by someone else, follow the existing stylistic conventions in that package.
+
+
+Some general guidelines have already been given in the section 1.\note{ref...}.
+The following rules refine them for some coding languages.
+Some pointers will be given for extra reading.
+
+% \subsection{General guidelines}
+% ?
+
+\subsection{CPP guidelines}
+
+The cpp guidelines are those given by ROS.
+Hereafter are gathered some of the most important guidelines:
+
+\paragraph{Convention}
+C++ source files have a .cpp extension, header files a .h extension.\\
+The files are named in lower case, using underscores:\\
+\begin{tt}
+my\_package/include/my\_package/foo\_bar.h\\
+my\_package/src/foo\_bar.cpp\\
+\end{tt}
+
+\begin{itemize}
+\item Files defining a class have the name of the class.
+\item C++ classes/types are normally named in camel case:\\
+\begin{tt}
+class FooBar { ... };
+\end{tt}
+\item Functions are in \begin{tt}camelCase\end{tt}, and their arguments are under\_scored\\
+\begin{tt}
+int exampleMethod(int example\_arg);
+\end{tt}
+
+\item Variables are \begin{tt}under\_scored\end{tt}.
+
+\item Constants are all capital: \begin{tt}GRAVITY\_FORCE\end{tt}.
+\end{itemize}
+
+\paragraph{Variables}
+Make your variable name explicit.
+Avoid one-letter variables, except for integral iterator variables (i, j, k).
+Avoid using tmp, aaaa or meaningless random sequence of letters.
+An exception is tolerated if the notation come from a paper (matrix name etc). 
+
+\paragraph{Namespace}
+Use namespaces to scope your code and gather classes/methods that belong to a same package or topic.
+Avoid defining global variables / functions. 
+Define them in an appropriate namespace or in an anonymous namespace in the cpp file to limit their effect.
+
+\paragraph{Headers}
+The headers mus be protected by multiple inclusion by using \#ifndef guards
+\begin{verbatim}
+#ifndef PACKAGE_PATH_FILE_H
+#define PACKAGE_PATH_FILE_H
+
+#endif  //PACKAGE_PATH_FILE_H
+\end{verbatim}
+
+Keep the headers light: use forward declaration.\\
+Never add "using namespaces" in headers
+
+\paragraph{Class}
+Attributes of class should have a final underscore to distinguish them from other variables.
+%Avoid protected?
+Forbid the copy of classes when necessary by making the copy constructor private or making the class inherit from : boost::noncopyable
+Do not abuse of the friendship.
+
+\paragraph{Function}
+Output arguments to methods / functions (i.e., variables that the function can modify) are passed by pointer, not by reference.\\
+Heavy Object should be passed by const reference, except for small data (bool, char, int, double)\\
+\begin{tt}
+int exampleMethod(const FooThing \& input, BarThing* output);
+\end{tt}
+
+\paragraph{Be a const addict} Add const whenever it is possible: in the parameters of a function (input/output) and for methods that must not modify the class attributes.\\
+Return elements by const reference.\\
+Do not return by const copy (it does not make sense).
+\begin{verbatim}
+const std::vector<double> & getValue() const; // Good
+const std::vector<double>   getValue() ; // Bad
+\end{verbatim}
+
+
+\paragraph{Preprocessor macros} should be avoided. Prefer inline functions, enums, and const variables to macros.
+
+\paragraph{Debugging and testing}
+Use assertions: assert or ROS\_ASSERT (for code on ROS).\\
+Use Ros messages: ROS\_FATAL, ROS\_ERROR, ROS\_WARN, ROS\_INFO, ROS\_DEBUG.\\
+Use callgrind, valgrind.
+
+\paragraph{Exceptions}
+
+Exceptions are the preferred error-reporting mechanism, as opposed to returning integer error codes.\\
+Always document what exceptions can be thrown by your package, on each function / method.\\
+Don't throw exceptions from destructors.\\
+Don't throw exceptions from callbacks that you don't invoke directly.\\
+
+
+When your code can be interrupted by exceptions, you must ensure that resources you hold will be deallocated when stack variables go out of scope. In particular, mutexes must be released, and heap-allocated memory must be freed. Accomplish this safety by using the following mutex guards and smart pointers:
+
+\paragraph{Forbidden practices}~\\
+Do NOT ignore warnings. If some warnings are way too verbose (e.g. boost on windows), silent them one by one.
+
+
+
+\paragraph{Sources}~\\
+Ros: \url{http://www.ros.org/wiki/CppStyleGuide}\\
+google: \url{google-styleguide.googlecode.com/svn/trunk/cppguide.xml}\\
+Forbidden Practices: \url{http://www.strauss.za.com/sla/code_std.asp}\\
+
+
+
+
+\subsection{Python}
+I propose to follow the python guidelines given by ROS \url{}
+
+\paragraph{Indentation} Use 4 spaces per indentation level.
+
+\paragraph{Parentheses} should be use sparingly: do not use them in return statements or conditional statements unless using parentheses for implied line continuation. %(See above.) It is however fine to use parentheses around tuples. 
+
+\paragraph{Imports} should usually be on separate lines, e.g.:
+\begin{verbatim}
+Yes: import os
+     import sys
+
+No:  import sys, os
+\end{verbatim}
+
+It's okay to say this though:\\
+\begin{tt}
+from subprocess import Popen, PIPE
+\end{tt}
+
+\paragraph{Note on compatibility}
+Use the REAL types returned by the function you use.
+\begin{enumerate}
+\item Example 1: Python/C API\footnote{\url{http://docs.python.org/c-api/dict.html}}\\
+\begin{tt}Py\_ssize\_t PyDict\_Size(PyObject *p)\end{tt}\\
+If you use this function you \textbf{MUST} use a Py\_ssize\_t and not an
+integer type chosen by you.
+Failing to do so will create conversion errors on different platforms.
+
+\item Example 2: Matrix Libraries and STL containers
+\footnote{\url{http://www.cplusplus.com/reference/stl/vector/}}
+
+A vector size method has the following API:
+\begin{tt}size\_type size() const;\end{tt}
+
+Which means that the size *MUST* be stored into a
+\begin{tt}std::vector<T>::size\_type variable.\end{tt}
+\end{enumerate}
+
+
+
+\paragraph{Package/Module Names}~\\
+All python code must be placed within a module namespace. 
+ROS exports your Python source directory to be on the path of any of your dependencies, so it is important not to accidentally clobber someone else's import. 
+We strongly recommend that this module name be the same as your ROS package name.
+
+There are two recommended code layouts:
+\begin{enumerate}
+\item Small modules with no msg/srvs
+\begin{verbatim}
+packagename
+ |- src/
+    |- packagename.py
+ |- scripts/
+    |- non-exported python files
+\end{verbatim}
+
+\item Module with msgs/srvs
+\begin{verbatim}
+packagename
+ |- src/
+    |- packagename/
+      |- __init__.py
+      |- yourfiles.py
+ |- scripts/
+    |- non-exported python files
+\end{verbatim}
+\end{enumerate}
+
+The more complicated layout for msg/srv files is required as the Python msg/srv generators will need to generate files into your package's namespace.
+
+In the rare case that you can't place your source code in src/ (e.g. thirdparty code), you can override the Python export path of your package by editing your manifest.
+
+See the next section for description of node files
+
+\paragraph{Node Files}
+In ROS, the name of a node type is the same as its executable name. 
+Typically, for python files, this means including \begin{tt}\#!/usr/bin/env python \end{tt}at the top of your main script, and having the main script's name == node's name.
+
+If your node is simple, this script may contain the entire code for it. Otherwise, the node file will likely do an import packagename and invoke code there.
+
+NOTE: we strive to keep ROS-specific code separate from reusable, generic code. The separation of 'node files' and files you place in src/packagename helps encourage this. 
+
+
+\paragraph{Sources}~\\
+ros: \url{http://www.ros.org/wiki/PyStyleGuide}\\
+google: \url{http://google-styleguide.googlecode.com/svn/trunk/pyguide.html}
+
+\subsection{XML: robot model}
+\paragraph{Indentation} Use 2 spaces for indentation.
+
+\paragraph{Robot model}
+For now, the models of the robots are provided under the xml ros format \url{ref necessary}.
+No official guidelines have been made so far for mobile robots.
+
+A Ros Enhancement Proposal is pending on for mobile robots\footnote{\url{http://www.ros.org/reps/rep-0105.html}} 
+and humanoid robots\footnote{\url{http://www.ros.org/reps/rep-0120.html}}
+( that provides extra information on vision, feet).
+This style will be adopted to write the models of the humanoids (especially for Romeo).
+
+
+\subsection{CMake}
+\begin{itemize}
+\item Use cmake to generate projects.
+
+\item When dealing with a great number of sources files (>8), list them in a SourcesLib.cmake.
+Otherwise you can list them in a CMakeFiles.txt
+
+\item Use List(APPEND a \$\{b\}) rather than set(a \$\{a\} \$\{b\})
+\end{itemize}
+
+%\subsection{Lua}
+%Documentation matlab, lua, spec files....
+
+%\subsection{Matlab}
+%http://www.mathworks.fr/support/solutions/en/data/1-1AN6R/index.html?solution=1-1AN6R
