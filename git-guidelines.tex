@@ -82,7 +82,7 @@ For SVN, the tag command is:\\
 
 %	\note{When creating the tag for a demo, make sure that all the required files can be found.}
 
-ROS a specific stack version policy \footnote{\url{http://www.ros.org/wiki/StackVersionPolicy}}:
+ROS has a specific stack version policy \footnote{\url{http://www.ros.org/wiki/StackVersionPolicy}}:
 \begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
 \item 0.1: completely experimental, unreviewed
 \item 0.2: some review has occurred, and we are migrating this stack to more stable APIs
@@ -214,17 +214,6 @@ Also, the following commands can be of use:
 \begin{tt}git fetch \end{tt} checks if there are any modification of the remote repository.\\
 \begin{tt}git pull -ff-only \end{tt} pulls the remote modifications only if the pull is feed-forward (else fails).\\
 
-\paragraph{Rebasing huge branches}
-\note{Robohow fellows: I'd like your opinion on the following issue:}
-The policies "every commit of the master can be computed" and "Use git --rebase" may conflict, especially 
-when the branch merged with the master branch is huge.
-Two solutions are possible:
-\begin{itemize}
-\item use the possibilities offered by git rebase to modify the commits (e.g. squash them).
-\item realize a merge with the master, so as to purposefully create a "circuit". 
-This offers the possibility to explore the commits realized in the branch (while ensuring that every commit in the master branch is functional).
-\end{itemize}
-
 \paragraph{Cleaning up}
 
 Do not forget to clean the dead branches of the remote repository from time to time.
@@ -241,13 +230,53 @@ git push origin :refs/heads/name_of_remote_branch
 % … take advantage of git stash.
 % Git submodule. Git ignore ?
 
+\subsection{Structure of a GIT repository}
+The repository should follow the model proposed in \footnote{\url{http://nvie.com/posts/a-successful-git-branching-model/}}.
+%\begin{figure}
+%\includegraphics[width=0.95\columnwidth]{Git-branching-model.eps}
+%\caption{Structure of a GIT repository}
+%\end{figure}
+Here is a short summary:
+\paragraph{Main permanent branches}
+The repository should have two permanent branches:
+\begin{itemize}
+\item The \textit{develop} branch, that contains commits as small as possible. This branch gives the detailed history of all the modification that have been realized on the repository. 
+\item The \textit{master} branch, that contains released version only. They \textbf{must} work. The corresponding commits may be huge, since they correspond to squashes of commits that have been pushed in the develop branch.
+\end{itemize}
+
+\paragraph{Extra permanent branches}
+Other permanent branches can be created, corresponding to important demonstration or papers.
+Those repositories should be stored in the root of the git repository.
+
+\paragraph{Temporary branches}
+Next to those branches, other branches can be created for several reasons:
+\begin{itemize}
+\item Develop new features. At the end of the test process, the commits should be \textit{rebased} with the release branches.
+\item Develop a hotfix. Once done, that are merged with both the master and the develop branch. 
+%\item Develop a release. Once done, that are merged with both the master and the develop branch. 
+\end{itemize}
+
+\includepdf[pages={1}]{Git-branching-model.pdf}
+
+%\paragraph{Rebasing huge branches}
+%\note{Robohow fellows: I'd like your opinion on the following issue:}
+%The policies "every commit of the master can be computed" and "Use git --rebase" may conflict, especially 
+%when the branch merged with the master branch is huge.
+%Two solutions are possible:
+%\begin{itemize}
+%\item use the possibilities offered by git rebase to modify the commits (e.g. squash them).
+%\item realize a merge with the master, so as to purposefully create a "circuit". 
+%This offers the possibility to explore the commits realized in the branch (while ensuring that every commit in the master branch is functional).
+%\end{itemize}
+
+
 \subsection{Working in community}
 
 \paragraph{Modifying an external package}
-If you have write access to the remote repository, you can commit your modification, push them in a new remote branch (\begin{tt}git push origin patch/improvment\end{tt}), ask for verification from the main developpers that will do/authorize the merge with the master branch. \\
+If you have write access to the remote repository, you can commit your modification, push them in a new remote branch (\begin{tt}git push origin patch/improvement\end{tt}), ask for verification from the main developers that will do/authorize the merge with the master branch. \\
 
 
-If you don't have write access to the remote repository, commit the modification on your local repository and create the corresponding patches using the command 
+If you do not have write access to the remote repository, commit the modification on your local repository and create the corresponding patches using the command 
 \begin{tt}git format-patch reference\_commit -o out\_folder\end{tt}\\
 e.g. 
 \begin{tt}git format-patch origin/master -o patches\end{tt}
@@ -261,7 +290,7 @@ Thus, the main developers will be able to directly apply your patches using the 
 \textbf{Do NOT} do \begin{tt}git diff > patch.txt\end{tt}
 This will create a file that is not directly usable, and the developers will have to recode your modifications.
 
-\paragraph{Using other's package}
+\paragraph{Using others' packages}
 Prefer working with tagged versions, that are more likely to be stable, and are better reference points.
 
 
@@ -276,6 +305,8 @@ In particular, the following practices should be prohibited:
 Rebasing published branches can lead to duplicate commits in the shared repository.
 \end{itemize}
 
+The only exception to these rules is when a file that should not been distributed has been pushed (file containing a password, sensitive informations \ldots).
+In this case, you can destroy the wrong commit by using \begin{tt}push -f\end{tt} and/or contacting the main person in charge of the code to explain what happened.
 
 \subsection{Sources}
 
@@ -289,5 +320,5 @@ Rebasing published branches can lead to duplicate commits in the shared reposito
 \paragraph{About the merge and the rebase}~\\
 \small{\url{http://darwinweb.net/articles/the-case-for-git-rebase}}\\
 \small{\url{http://jeffkreeftmeijer.com/2010/the-magical-and-not-harmful-rebase}}\\
-
+\small{\url{http://nvie.com/posts/a-successful-git-branching-model}}\\
 %\end{document}
