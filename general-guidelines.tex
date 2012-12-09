@@ -12,7 +12,7 @@ There are several reasons for that:
 Prefer asserting the consistency inside one package rather than the consistency inside the whole project.
 However, if you are creating a new package, please follow those coding guidelines.
 
-\section{General guidelines}
+\chapter{General guidelines}
 \label{section:general-guidelines}
 \begin{itemize}
 \item Ensure the consistency of each project (this is \textit{that} important).
@@ -23,7 +23,7 @@ However, if you are creating a new package, please follow those coding guideline
 \item Do not neglect debugging tools (e.g. make the debug easier by using assertion (C++)).
 \end{itemize}
 
-\subsection{General shape of package}
+\section{General shape of package}
 A package should at least contain the following elements:
 %The general shape of a package is as follow:
 %General shape of packages (like, a Readme, folder structure - include - src ...)
@@ -57,7 +57,7 @@ The licenses used in this purpose are the following ones (from the more restrict
 
 % According to ROS guidelines\url{http://www.ros.org/wiki/DevelopersGuide}
 
-\subsection{Clarify and document your code}
+\section{Clarify and document your code}
 Keep in mind that your code will be read, reused and (eventually) improved by humans.
 You want them to use your code wisely, and you don't have the time to help each of them personally.
 
@@ -74,7 +74,7 @@ Please refer to the articles corresponding to the code, \textit{especially} if t
 Yet, do not overload your code by documenting the obvious. This can be avoided:\\
 \begin{tt} i+=1 //increase the index value of 1\end{tt}
 
-\subsection{Test a lot}
+\section{Test a lot}
 Testing is the easiest way to check the behavior and good health of your code through its evolution.
 It allows to find what (and who) is responsible for a wrong behavior.
 Also, it can also be of help to understand the code.
@@ -90,7 +90,7 @@ Similarly, the more automatized it is, the better.
 
 Automatize your tests using cTest or gtest\footnote{\url{http://www.ros.org/wiki/gtest}}.
 
-\subsection{Bug tracking - bug report}
+\section{Bug tracking - bug report}
 Eventually, you'll encounter some issues using code developed by someone else.\\
 Do not hesitate to report an issue, and to signal the issue in the code with a TODO.\\
 Please be explicit when you report an issue, and define the following informations:
@@ -105,11 +105,11 @@ Help the developers to reproduce the bug, e.g. by creating a branch correspondin
 %\note{voir la liste des choses à ne pas faire pour plus de détails}
 
 
-\subsection{Feature request}
+\section{Feature request}
 Similarly to the bug report, prefer opening tickets on the corresponding website.
 You can help someone by doing this, especially when there are reasons not to implement the proposed feature.
 
-\subsection{Deprecation}
+\section{Deprecation}
 As soon as there are users of your code, you have a responsibility not to pull the rug out from under them with sudden breaking changes. 
 Instead, use a process of deprecation, which means marking a feature or component as being no longer supported, with a schedule for its removal. Give users time to adapt, which is usually one release cycle, then do the removal.
 

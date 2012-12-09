@@ -1,7 +1,4 @@
-
-
-\pagebreak
-\section{Code guidelines}
+\chapter{Code guidelines}
 
 %For each of the following langage, I may invite the reader to follow an existing guidelines, in which case I will briefly sum the most important do and do not rules.
 %Also, I propose to add some exceptions / tolerated elements.
@@ -17,10 +14,10 @@ Some general guidelines have already been given in the section \ref{section:gene
 The following rules refine them for some coding languages.
 Some pointers will be given for extra reading.
 
-% \subsection{General guidelines}
+% \section{General guidelines}
 % ?
 
-\subsection{CPP guidelines}
+\section{CPP guidelines}
 
 The cpp guidelines are those given by ROS.
 Hereafter are gathered some of the most important guidelines:
@@ -128,7 +125,7 @@ Forbidden Practices: \url{http://www.strauss.za.com/sla/code_std.asp}\\
 
 
 
-\subsection{Python}
+\section{Python}
 I propose to follow the python guidelines given by ROS \url{}
 
 \paragraph{Indentation} Use 4 spaces per indentation level.
@@ -216,7 +213,7 @@ NOTE: we strive to keep ROS-specific code separate from reusable, generic code. 
 ros: \url{http://www.ros.org/wiki/PyStyleGuide}\\
 google: \url{http://google-styleguide.googlecode.com/svn/trunk/pyguide.html}
 
-\subsection{XML: robot model}
+\section{XML: robot model}
 \paragraph{Indentation} Use 2 spaces for indentation.
 
 \paragraph{Robot model}
@@ -229,7 +226,7 @@ and humanoid robots\footnote{\url{http://www.ros.org/reps/rep-0120.html}}
 This style will be adopted to write the models of the humanoids (especially for Romeo).
 
 
-\subsection{CMake}
+\section{CMake}
 \begin{itemize}
 \item Use cmake to generate projects.
 
@@ -239,8 +236,8 @@ Otherwise you can list them in a CMakeFiles.txt
 \item Use List(APPEND a \$\{b\}) rather than set(a \$\{a\} \$\{b\})
 \end{itemize}
 
-%\subsection{Lua}
+%\section{Lua}
 %Documentation matlab, lua, spec files....
 
-%\subsection{Matlab}
+%\section{Matlab}
 %http://www.mathworks.fr/support/solutions/en/data/1-1AN6R/index.html?solution=1-1AN6R

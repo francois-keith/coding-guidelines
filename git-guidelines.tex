@@ -1,9 +1,8 @@
-\pagebreak
-\section{Versioning general settings}
+\chapter{Versioning general settings}
 % Whether it is for a private project or a shared project, it is mandatory that ones uses a versioning tool.
 
 
-\subsection{SVN or Git?}
+\section{SVN or Git?}
 Use Git for text files, e.g. sources code (C, python, matlab, java...) or latex (.tex, .bib).\\
 Use SVN for binary-like files (.doc files, videos, pdf...).\\
 Define the files to be ignored by using .gitignore or svn:ignore. 
@@ -11,19 +10,19 @@ Typically, never version restricted access file or automatically generated files
 If you add by mistake such files, contact your administrator so that he can correct this quickly before anyone pulls it.
 % \url{http://svnbook.red-bean.com/en/1.1/ch07s02.html#svn-ch-7-sect-2.3.3}
 
-%\subsection{Naming convention}
+%\section{Naming convention}
 %
 %The naming convention is the one proposed by git :
 %\begin{verbatim}
 %name = FirstName LastName
 %\end{verbatim}
 
-\subsection{Line endings}
+\section{Line endings}
 All text files must be normalized so that lines terminate in the unix style (LF).
 Mixture of termination styles will sooner or later create an issue when the end-of-line character will change, and make the history unusable.
 Avoid committing files that terminate in CRLF (windows ending) or CR (mac ending) since such a modification is likely to appear as a whole-file modification.
 
-\subsection{Commit message}
+\section{Commit message}
 
 It is important to keep the commits as small and simple as possible.
 Typically, create one commit per topic (bug fix, feature addition,  documentation update...).
@@ -56,7 +55,7 @@ Please avoid putting simply "Remove bug".\\
 When committing code on behalf of others use the \begin{tt}{--author}\end{tt} option, e.g. \begin{tt}git commit --author "Emmett Brown $<$\url{emmett.brown@bttf.org}$>$"\end{tt},
 or thank the person in the message "Thanks to Emmett Brown for notifying."
 
-\subsection{Tag}
+\section{Tag}
 Tagging is a really handy way to ensure the coherence of a set of packages, e.g. by using pkg-config.
 The release tags have the shape X[.Y[.Z[-descr]]] (eg. 1.0, 0.2.3-beta)
 
@@ -92,7 +91,7 @@ ROS has a specific stack version policy \footnote{\url{http://www.ros.org/wiki/S
 \end{itemize}
 
 
-\subsection{Branch}
+\section{Branch}
 The main branch (typically the master) should \textbf{always} be usable (compilable and executable with unit tests successful).
 Except from small modifications, all developments should be first realized in a separated branch (that may be published or remain local), tested, then merged with the master branch.\\
 
@@ -114,7 +113,7 @@ Use a tag if you are sure that the corresponding commit is usable and stable.
 Otherwise, use a branch, so as to allow adding patches afterwards, and make the update of local repository easier.
 
 
-\subsection{Communication with remote repository}
+\section{Communication with remote repository}
 
 \subsubsection{Merging of branches}
 
@@ -230,7 +229,7 @@ git push origin :refs/heads/name_of_remote_branch
 % … take advantage of git stash.
 % Git submodule. Git ignore ?
 
-\subsection{Structure of a GIT repository}
+\section{Structure of a GIT repository}
 The repository should follow the model proposed in \footnote{\url{http://nvie.com/posts/a-successful-git-branching-model/}}.
 %\begin{figure}
 %\includegraphics[width=0.95\columnwidth]{Git-branching-model.eps}
@@ -270,7 +269,7 @@ Next to those branches, other branches can be created for several reasons:
 %\end{itemize}
 
 
-\subsection{Working in community}
+\section{Working in community}
 
 \paragraph{Modifying an external package}
 If you have write access to the remote repository, you can commit your modification, push them in a new remote branch (\begin{tt}git push origin patch/improvement\end{tt}), ask for verification from the main developers that will do/authorize the merge with the master branch. \\
@@ -294,7 +293,7 @@ This will create a file that is not directly usable, and the developers will hav
 Prefer working with tagged versions, that are more likely to be stable, and are better reference points.
 
 
-\subsection{Forbidden practices}
+\section{Forbidden practices}
 Briefly, it is forbidden to modify a commit that has already been pushed. 
 Such operations are likely to damage the remote repository and/or the repository of other users.
 In particular, the following practices should be prohibited: 
@@ -308,7 +307,7 @@ Rebasing published branches can lead to duplicate commits in the shared reposito
 The only exception to these rules is when a file that should not been distributed has been pushed (file containing a password, sensitive informations \ldots).
 In this case, you can destroy the wrong commit by using \begin{tt}push -f\end{tt} and/or contacting the main person in charge of the code to explain what happened.
 
-\subsection{Sources}
+\section{Sources}
 
 \paragraph{General guidelines}~\\
 \small{\url{https://wiki.duraspace.org/display/FCREPO/Git+Guidelines+and+Best+Practices}}\\

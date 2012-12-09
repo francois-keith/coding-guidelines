@@ -1,5 +1,4 @@
-\pagebreak
-\section{ROS guidelines}
+\chapter{ROS guidelines}
 
 The following rules are a copy of the slides created by Lorenz M\"osenlechner \footnote{\url{https://robohow.org/_media/meetings/first-integration-workshop/ros-best-practices.pdf}}.\\
 
@@ -13,7 +12,7 @@ Multiple overlays with different versions can exist in parallel, e.g.:
 \item Overlay for experimenting with bleeding edge code of other people.
 \end{itemize}
 
-\subsection{ROS Overlays}
+\section{ROS Overlays}
 \paragraph{Creation}
 The creation of an overlay with rosws is realized as follows:
 \begin{verbatim}
@@ -55,7 +54,7 @@ They are ideal for repository snap shots and collaboration, and enable to specif
 \end{verbatim}
 
 
-\subsection{Naming Conventions}
+\section{Naming Conventions}
 \paragraph{File names}
 \begin{itemize}
 \item Package names are lower case.
@@ -80,7 +79,7 @@ Topics: $\rightarrow$ /node\_name/foo
 \end{itemize}
 
 
-\subsection{Best Practices}
+\section{Best Practices}
 \paragraph{Topics vs. Services vs. Actions}
 \begin{itemize}
 \item Use \textit{topics} for publishing continuous streams of data, e.g. sensor data, continuous detection results, . . .\\
@@ -118,7 +117,7 @@ actions (separation of interface and implementation).
 \end{itemize}
 
 
-\subsection{Third Party Libraries}
+\section{Third Party Libraries}
 \begin{itemize}
 \item If possible, try to use libraries from Debian packages.
 \item Specify rosdep dependencies (tool for installing system packages).
@@ -130,7 +129,7 @@ package that downloads and compiles the package.
 \end{itemize}
 
 
-\subsection{Collaboration}
+\section{Collaboration}
 % Use version control systems (e.g. git or svn)
 % Create tags for stable versions that others can use.
 \begin{itemize}
@@ -143,7 +142,7 @@ provided.
 \item Data can be recorded and exchanged using bag files.
 \end{itemize}
 
-\subsection{ROS Bag Files}
+\section{ROS Bag Files}
 %\note{definition of a ros bag}
 Recording of a bag:
 \begin{tt}rosbag record <topic> <topic> ...\end{tt}\\
