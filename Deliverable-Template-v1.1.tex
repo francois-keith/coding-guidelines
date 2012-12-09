@@ -6,6 +6,19 @@
 \usepackage{lmodern}
 \usepackage{fancyhdr}
 \usepackage{titlesec}
+
+\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+%\usepackage{color}  % assumes amsmath package installed
+%\usepackage[pdftex]{hyperref}
+%
+\usepackage{url}
+%\usepackage{ulem}
+
+\usepackage{enumitem}
+\usepackage{pdfpages}
+
 \graphicspath{{../../../pictures/logos/}{.}}
 
 
@@ -14,11 +27,11 @@
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % Definitions -- TO BE UPDATED FOR EACH DELIVERABLE
 %
-\newcommand{\wpnumber}{WP X}
+\newcommand{\wpnumber}{WP 7}
 
-\newcommand{\delnumber}{DX.X}
-\newcommand{\deltitle}{Title of the deliverable}
-\newcommand{\delversion}{1.0}
+\newcommand{\delnumber}{D7.3}
+\newcommand{\deltitle}{Guidelines for software development}
+\newcommand{\delversion}{0.1}
 
 \newcommand{\deldate}{January 31st, 2013}
 \newcommand{\delnature}{Report}
@@ -114,15 +127,26 @@ n$^\textrm{o}$\grantnumber \ \projectacronym.
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 % START EDITING HERE
 
-\chapter*{Summary}
-Summary....
+%\chapter*{Summary}
+%Summary....
+%
+%
+%\chapter{Chapter-Title}
+%
+%\section{Section 1.1}
+%
+%\section{Section 1.2}
 
+%\title{}
+%\maketitle
+%\tableofcontents
+%
+\pagebreak
 
-\chapter{Chapter-Title}
-
-\section{Section 1.1}
-
-\section{Section 1.2}
+\input{general-guidelines}
+\input{git-guidelines}
+\input{ros-guidelines}
+\input{cpp-guidelines}
 
 
 \end{document} 
