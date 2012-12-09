@@ -1,5 +1,5 @@
-This document will details some rules for future developed code.
-Keep in mind that the code will be read by humans and will be eventually modified by them (you're maybe not the last one to use it). 
+This document will detail some rules for future developed code.
+Keep in mind that the code will be read by humans and will be eventually modified by them (you may not be the last person to use it). 
 It must be readable, understandable and reusable.\\
 
 The most important rule about coding is the \textbf{consistency}.
@@ -13,12 +13,13 @@ Prefer asserting the consistency inside one package rather than the consistency 
 However, if you are creating a new package, please follow those coding guidelines.
 
 \section{General guidelines}
+\label{section:general-guidelines}
 \begin{itemize}
 \item Ensure the consistency of each project (this is \textit{that} important).
 \item Maintain the documentation up-to-date (use doxygen, sphinx...), and make your code understandable.
 \item Make the validation of the code easier by adding unit-tests.
-\item Use versioning tools (git or svn, depending on the type of data), tag versions that works and release often.
-\item Keep the code clean. Remove useless and dead code, (especially if it is versioned).
+\item Use versioning tools (git or svn, depending on the type of data), tag versions that work and release often.
+\item Keep the code clean. Remove useless and dead code (especially if it is versioned).
 \item Do not neglect debugging tools (e.g. make the debug easier by using assertion (C++)).
 \end{itemize}
 
@@ -58,9 +59,9 @@ The licenses used in this purpose are the following ones (from the more restrict
 
 \subsection{Clarify and document your code}
 Keep in mind that your code will be read, reused and (eventually) improved by humans.
-You want them to use wisely your code, and you don't have the time to help each of them personally.
+You want them to use your code wisely, and you don't have the time to help each of them personally.
 
-Write the documentation at the same time as the code. 
+Write the documentation and the code at the same time. 
 Detail the how of your code, but don't forget the why. 
 Knowing the goal of your code will help one to detect/correct wrong behavior.
 
@@ -68,7 +69,7 @@ Do not hesitate to detail any specific or unusual implementation
 (e.g. the use of the specific structure of a sparse matrix to gain computation time).
 Similarly, document your variables: units, specific bounds, legal values and give them \textit{explicit} names (avoid tmp or random sequence of letters).	
 
-Please refer the articles corresponding to the code, \textit{especially} if the notations come from it.
+Please refer to the articles corresponding to the code, \textit{especially} if the notations come from it.
 
 Yet, do not overload your code by documenting the obvious. This can be avoided:\\
 \begin{tt} i+=1 //increase the index value of 1\end{tt}
@@ -87,7 +88,7 @@ Similarly, the more automatized it is, the better.
 \item Do memory handling tests (valgrind).
 \end{itemize}
 
-Automatize your tests using cTest or gtest\url{http://www.ros.org/wiki/gtest}.
+Automatize your tests using cTest or gtest\footnote{\url{http://www.ros.org/wiki/gtest}}.
 
 \subsection{Bug tracking - bug report}
 Eventually, you'll encounter some issues using code developed by someone else.\\
@@ -96,8 +97,8 @@ Please be explicit when you report an issue, and define the following informatio
 your goal (maybe there is another/safer way to do what you're trying to do), 
 your OS (32 bits/64 bits), your version of ROS, the version of the packages you are using...\\
 
-Prefer opening a ticket on the project management web application associated to the package, than contacting directly the responsible of the code. 
-You might not be only one to encounter the problem and the resulting discussion might help someone else.\\
+Prefer opening a ticket on the project management web application associated to the package, than contacting directly the person in charge of the code. 
+You might not be the only one to encounter the problem and the resulting discussion might help someone else.\\
 
 Help the developers to reproduce the bug, e.g. by creating a branch corresponding to your problem.
 
@@ -105,7 +106,7 @@ Help the developers to reproduce the bug, e.g. by creating a branch correspondin
 
 
 \subsection{Feature request}
-Similarly to the bug report, prefer opening tickets on the corresponding web-site.
+Similarly to the bug report, prefer opening tickets on the corresponding website.
 You can help someone by doing this, especially when there are reasons not to implement the proposed feature.
 
 \subsection{Deprecation}

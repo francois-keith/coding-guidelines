@@ -3,7 +3,7 @@
 \pagebreak
 \section{Code guidelines}
 
-%For each of the following langage, I may invite the reader to follow an existing guidelines, in which case I will briefly sum the most important do and don't rules.
+%For each of the following langage, I may invite the reader to follow an existing guidelines, in which case I will briefly sum the most important do and do not rules.
 %Also, I propose to add some exceptions / tolerated elements.
 
 The integration in ROS is one possible objective of the code.
@@ -13,8 +13,7 @@ However, please be aware that this integration is not mandatory: one can wants i
 %However, keep in mind maintaining that the consistency of code style in each package has priority above all other consideration.
 %Follow this guide whenever possible, e.g. when creating a new package, but if you are editing a package written by someone else, follow the existing stylistic conventions in that package.
 
-
-Some general guidelines have already been given in the section 1.\note{ref...}.
+Some general guidelines have already been given in the section \ref{section:general-guidelines}
 The following rules refine them for some coding languages.
 Some pointers will be given for extra reading.
 
@@ -49,6 +48,10 @@ int exampleMethod(int example\_arg);
 
 \item Constants are all capital: \begin{tt}GRAVITY\_FORCE\end{tt}.
 \end{itemize}
+
+\paragraph{Indentation}
+The indentation should follow the bloc structure of the program.
+Put only one instruction by line.
 
 \paragraph{Variables}
 Make your variable name explicit.
@@ -106,8 +109,8 @@ Use callgrind, valgrind.
 
 Exceptions are the preferred error-reporting mechanism, as opposed to returning integer error codes.\\
 Always document what exceptions can be thrown by your package, on each function / method.\\
-Don't throw exceptions from destructors.\\
-Don't throw exceptions from callbacks that you don't invoke directly.\\
+Do not throw exceptions from destructors.\\
+Do not throw exceptions from callbacks that you do not invoke directly.\\
 
 
 When your code can be interrupted by exceptions, you must ensure that resources you hold will be deallocated when stack variables go out of scope. In particular, mutexes must be released, and heap-allocated memory must be freed. Accomplish this safety by using the following mutex guards and smart pointers:
