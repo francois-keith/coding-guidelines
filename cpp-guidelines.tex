@@ -10,7 +10,7 @@ However, please be aware that this integration is not mandatory: one can wants i
 %However, keep in mind maintaining that the consistency of code style in each package has priority above all other consideration.
 %Follow this guide whenever possible, e.g. when creating a new package, but if you are editing a package written by someone else, follow the existing stylistic conventions in that package.
 
-Some general guidelines have already been given in the section \ref{section:general-guidelines}
+Some general guidelines have already been given in the section \ref{section:general-guidelines}. 
 The following rules refine them for some coding languages.
 Some pointers will be given for extra reading.
 
@@ -23,8 +23,15 @@ The cpp guidelines are those given by ROS.
 Hereafter are gathered some of the most important guidelines:
 
 \paragraph{Convention}
-C++ source files have a .cpp extension, header files a .h extension.\\
 The files are named in lower case, using underscores:\\
+
+\begin{itemize}
+\item C++ source files have a .cpp extension
+\item header files a .h extension
+\item template declaration a .hxx extension 
+\item template definition a .t.cpp extension
+\end{itemize}
+Example:\\
 \begin{tt}
 my\_package/include/my\_package/foo\_bar.h\\
 my\_package/src/foo\_bar.cpp\\
@@ -47,7 +54,7 @@ int exampleMethod(int example\_arg);
 \end{itemize}
 
 \paragraph{Indentation}
-The indentation should follow the bloc structure of the program.
+The indentation should follow the bloc structure of the program.\\
 Put only one instruction by line.
 
 \paragraph{Variables}
@@ -62,7 +69,7 @@ Avoid defining global variables / functions.
 Define them in an appropriate namespace or in an anonymous namespace in the cpp file to limit their effect.
 
 \paragraph{Headers}
-The headers mus be protected by multiple inclusion by using \#ifndef guards
+The headers must be protected by multiple inclusion by using \#ifndef guards
 \begin{verbatim}
 #ifndef PACKAGE_PATH_FILE_H
 #define PACKAGE_PATH_FILE_H
@@ -76,15 +83,16 @@ Never add "using namespaces" in headers
 \paragraph{Class}
 Attributes of class should have a final underscore to distinguish them from other variables.
 %Avoid protected?
-Forbid the copy of classes when necessary by making the copy constructor private or making the class inherit from : boost::noncopyable
+Forbid the copy of classes when necessary by making the copy constructor private or making the class inherit from : boost::noncopyable\\
 Do not abuse of the friendship.
 
 \paragraph{Function}
 Output arguments to methods / functions (i.e., variables that the function can modify) are passed by pointer, not by reference.\\
-Heavy Object should be passed by const reference, except for small data (bool, char, int, double)\\
+Heavy object should be passed by const reference, except for small data (bool, char, int, double)\\
 \begin{tt}
 int exampleMethod(const FooThing \& input, BarThing* output);
-\end{tt}
+\end{tt}\\
+Limit the number of arguments of a function to 5.
 
 \paragraph{Be a const addict} Add const whenever it is possible: in the parameters of a function (input/output) and for methods that must not modify the class attributes.\\
 Return elements by const reference.\\
@@ -126,7 +134,7 @@ Forbidden Practices: \url{http://www.strauss.za.com/sla/code_std.asp}\\
 
 
 \section{Python}
-I propose to follow the python guidelines given by ROS \url{}
+Follow the python guidelines given by ROS \url{}
 
 \paragraph{Indentation} Use 4 spaces per indentation level.
 
@@ -217,12 +225,12 @@ google: \url{http://google-styleguide.googlecode.com/svn/trunk/pyguide.html}
 \paragraph{Indentation} Use 2 spaces for indentation.
 
 \paragraph{Robot model}
-For now, the models of the robots are provided under the xml ros format \url{ref necessary}.
+For now, the models of the robots are provided under the xml ros format. % \url{ref necessary}.
 No official guidelines have been made so far for mobile robots.
 
 A Ros Enhancement Proposal is pending on for mobile robots\footnote{\url{http://www.ros.org/reps/rep-0105.html}} 
 and humanoid robots\footnote{\url{http://www.ros.org/reps/rep-0120.html}}
-( that provides extra information on vision, feet).
+(that provides extra information on vision, feet).
 This style will be adopted to write the models of the humanoids (especially for Romeo).
 
 
