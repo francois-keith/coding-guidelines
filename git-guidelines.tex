@@ -4,9 +4,11 @@
 
 \section{SVN or Git?}
 Use Git for text files, e.g. sources code (C, python, matlab, java...) or latex (.tex, .bib).\\
-Use SVN for binary-like files (.doc files, videos, pdf...).\\
+You may use SVN for huge binary-like files (.doc files, videos, pdf...). 
+Indeed, using git to version huge files will drastically increase the size of the local git repository on the user's side. With svn, you can do only partial checkout, which can be practical.\\
+
 Define the files to be ignored by using .gitignore or svn:ignore. 
-Typically, never version restricted access file or automatically generated files (e.g. by a compiler).
+Typically, \textbf{never version restricted access file} or automatically generated files (e.g. by a compiler).
 If you add by mistake such files, contact your administrator so that he can correct this quickly before anyone pulls it.
 % \url{http://svnbook.red-bean.com/en/1.1/ch07s02.html#svn-ch-7-sect-2.3.3}
 
@@ -16,11 +18,6 @@ If you add by mistake such files, contact your administrator so that he can corr
 %\begin{verbatim}
 %name = FirstName LastName
 %\end{verbatim}
-
-\section{Line endings}
-All text files must be normalized so that lines terminate in the unix style (LF).
-Mixture of termination styles will sooner or later create an issue when the end-of-line character will change, and make the history unusable.
-Avoid committing files that terminate in CRLF (windows ending) or CR (mac ending) since such a modification is likely to appear as a whole-file modification.
 
 \section{Commit message}
 
@@ -57,7 +54,7 @@ or thank the person in the message "Thanks to Emmett Brown for notifying."
 
 \section{Tag}
 Tagging is a really handy way to ensure the coherence of a set of packages, e.g. by using pkg-config.
-The release tags have the shape X[.Y[.Z[-descr]]] (eg. 1.0, 0.2.3-beta)
+The release tags have the shape vX[.Y[.Z[-descr]]] (eg. 1.0, 0.2.3-beta)
 
 \begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
 \item X is the major version number. Change of major version number indicates that the code may not be backward compatible.
@@ -69,18 +66,30 @@ The release tags have the shape X[.Y[.Z[-descr]]] (eg. 1.0, 0.2.3-beta)
 It is also possible to define tags for specific purpose (experiments, paper...).
 In this case, they can have a different shape (eg: iros2012-FirstAuthorName).\\
 
-Prefer tagging with a message, in order to get the correct tag with \begin{tt}git describe\end{tt}.\\
-\begin{tt}
-\$ git tag v1.2.3 -m"Small description"\\
-\$ git describe\\
-> v1.5.1-2-g59d2 \# where 59d2 is the commit number.
-\end{tt}\\
 
+Prefer tagging with a message, in order to get the correct tag with \begin{tt}git describe\end{tt}.\\
+Also, you can use the -s option to create a GPG-signed tag and certifies that \textit{you} are the one that created the tag.
+
+\begin{tt}
+\$ git tag -s v1.2.3 -m"Small description"\\
+\$ git describe\\
+> v1.5.1-2-g59d2 \# where 59d2 is the commit number.\\
+\$ git tag -v v1.2.3\\
+object f148df68ed4f5c1fb7d35aae68342f6bb0ab7356\\
+type commit\\
+tag v1.2.3\\
+tagger Emmett Brown <emmett.brown@bttf.org> 1357239557 +0100\\
+~\\
+Small Test\\
+gpg: Signature made Wed 21 Oct 2015 07:59:17 PM CET using RSA key ID 8D7EAAA1\\
+gpg: Good signature from "Emmett Brown <emmett.brown@bttf.org>"\\
+\end{tt}
+~\\
 For SVN, the tag command is:\\ 
 \begin{tt}svn cp --parents <repo>/trunk <repo>/tags/v0.0.1\end{tt}\\
 
 %	\note{When creating the tag for a demo, make sure that all the required files can be found.}
-
+~\\
 ROS has a specific stack version policy \footnote{\url{http://www.ros.org/wiki/StackVersionPolicy}}:
 \begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
 \item 0.1: completely experimental, unreviewed
@@ -92,19 +101,17 @@ ROS has a specific stack version policy \footnote{\url{http://www.ros.org/wiki/S
 
 
 \section{Branch}
-The main branch (typically the master) should \textbf{always} be usable (compilable and executable with unit tests successful).
+The main branch, \textbf{master}, should \textbf{always} be usable (compilable and executable with unit tests successful).
+Another branch, \textbf{stable}, contains all the stable versions of the code.
+
 Except from small modifications, all developments should be first realized in a separated branch (that may be published or remain local), tested, then merged with the master branch.\\
 
-Before pushing on the remote repository, it is important to make sure that everything works well: 
-clone your repository in a local folder (e.g. /tmp/), then compile and test it.
-This simple manipulation reduces small mistakes such as forgotten files.
-%If required, check with the local authority.
 
 \paragraph{Convention}
 The name of the branch should describe the purpose of the branch.
 Sorting the branches by sub-folders (i.e. using '/') increases the readability for a high number of branches.
 
-Branches in the root folder (such as master or iros02) should be usable whereas 
+Branches in the root folder (such as "master", "stable", "iros02"...) should be usable whereas 
 work in progress should be in a sub-folder (e.g. topic/debug-dynamic, \textit{developer-name}/dev for a personal branch).
 
 \paragraph{Branch or tag?}
@@ -113,16 +120,102 @@ Use a tag if you are sure that the corresponding commit is usable and stable.
 Otherwise, use a branch, so as to allow adding patches afterwards, and make the update of local repository easier.
 
 
+
+
+\subsubsection{Merging branches: git rebase and git merge}
+
+Consider the project with two branches \textit{initial} and \textit{feature} on your local machine.
+Two commands, \begin{tt}git rebase\end{tt} and \begin{tt}git merge\end{tt}, can be used to gather the modifications realized in the two branches.
+They differ in the way the blending is realized, as depicted in Fig.~\ref{fig:merge-rebase}:
+\begin{itemize}
+\item The merge process consists in keeping the history of both branches and creating an additional commit entitled "Merge branch ..." that gathers the modifications of both branches.
+\item The rebase process consists in reapplying all the commits of the current branch after the last commit of the target branch. 
+ For example:\\
+\begin{tt}
+emmet@pc:\textasciitilde/work (feature): git rebase initial\\
+\end{tt}
+will stack all the commits of the feature branch after the commits of the master initial, and will rewrite the feature branch.
+% This could be compared to the application of git cherry-pick on each commit of the current branch.
+\end{itemize}
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[scale=1]{img/merge_rebase.eps}
+\caption{Difference between the commands \textit{git merge} and \textit{git rebase}.
+The first graph represents the original state of the git repository.
+The second one shows the result of the command \textit{git rebase initial}, realized on the branch \textit{feature}: the shape of the branch feature changes, so that every commit realized on this branch now appear to be realized after the commits realized on the init branch
+The third graph shows the result of the command \textit{git merge feature}, realized on the branch \textit{initial}: an extra commit, gathering all the modifications realized on the branch feature, is added to the branch initial.}
+\label{fig:merge-rebase}
+\end{figure}
+
+If you are afraid of losing the initial branch after a rebase (e.g. if one step of the rebase went wrong), do the rebase from a temporary branch\\
+\begin{tt}
+emmet@pc:\textasciitilde/work (feature): git checkout -b rebase-feature\\
+emmet@pc:\textasciitilde/work (rebase-feature): git rebase origin initial
+\end{tt}\\
+You can also retrieve the initial branch using \begin{tt}git reflog\end{tt}.
+
+The advantage of the rebase process is to keep the history readable and more linear.
+As a consequence, browsing the history and debugging (using \begin{tt}git bisect\end{tt}) is simpler.
+In exchange, the initial history is rewritten (order of commit modified, commits squashed...).\\
+
+The advantage of the merge is that it keeps the original order of the commits.
+The main disadvantage is that the history graph will quickly grow into a bag knot, making debugging a nightmare, especially when several users develop on the same branch.
+Also, in case of conflict, the resulting commit is likely to be really obscure if some extra modifications have to be added.\\
+
+
+In order to have a more linear history, it is better to use \begin{tt}git rebase\end{tt}, especially for small differences (1 to 3 commits).\\
+
 \section{Communication with remote repository}
 
-\subsubsection{Merging of branches}
+Working with a remote repository introduces some subtleties and some extra good practices to follow.
+Since this repository is likely to be shared between several users / several places, it is 
+important to ensure the good state and the coherency of the remote repository.
+An error realized on this repository may be hard to correct and is likely to propagate quickly.
+It is thus important to know what to do and what not to do.\\
 
-The life and death of a branch is classically as  follows
-\begin{itemize}
-\item Create the branch \textit{topic/my\_new\_feature} based on the branch \textit{start}\\
+Especially, the good use of the command \textit{git rebase} requires a little practice, 
+so if you are not familiar with this command, 
+please ask the maintainer of the code to realize the merge/rebase operation for you.
+
+\subsection{Recommended practices}
+\subparagraph{Forbidden practices}
+Briefly, it is forbidden to modify a commit that has already been pushed. 
+Such operations are likely to damage the remote repository and/or the repository of other users.
+In particular, the following practices should be prohibited: 
+\begin{enumerate}
+\item Forcing a push. \textbf{Never} use the command \begin{tt}{git push -f}\end{tt}
+\item Changing a commit after pushing it. Once pushed, it is too late to do a \begin{tt}{git commit --amend}\end{tt} (this commands allows to correct a commit by changing the commit message or the modifications included).
+\item Rebasing a branch already on the remote repository, and pushing again on this branch, ie:\\
+\begin{tt}
+git branch feature origin/feature $\#$ create the branch feature.\\
+git checkout feature		$\#$ change to the branch feature\\
+git rebase master		$\#$ change the order of commits\\
+git push origin feature  $\#$ Push the modifications to the remote branch (not straightforward in most cases).\\
+\end{tt}
+ 
+The rebase process should be done only at the very end of the life cycle of a branch.
+Rebasing published branches can lead to duplicate commits in the shared repository. An exemple is given in section~\ref{section:rebase-warning}.
+\end{enumerate}
+
+The only exception to the rule 1 is when a file that should not been distributed has been pushed (file containing a password, sensitive informations \ldots).
+In this case, you can destroy the wrong commit by using \begin{tt}push -f\end{tt} and/or contacting the main person in charge of the code to explain what happened.
+
+\subparagraph{Good practices}
+Before pushing on the remote repository, it is important to make sure that all the required files are included, and that everything works well: 
+clone your repository in a local folder (e.g. /tmp/), then compile and test it.
+This simple manipulation reduces small mistakes such as forgotten files.
+
+
+\subsection{Merging of branches}
+
+The life and death of a branch follows classicaly this scheme, illustrated by Fig.~\ref{fig:life-and-death}
+\begin{enumerate}
+\item Create the branch \textit{topic/feature} based on the branch \textit{start}\\
 \begin{tt}
 git pull origin start\\
-git checkout -b topic/my\_new\_feature
+git checkout -b topic/feature
 \end{tt}
 
 \item Add some commits.
@@ -139,60 +232,32 @@ git rebase origin/start
 
 \item  Do not forget to test the new branch.\\
 
-\item  Go back to the starting branch and merge with the branch to be deleted.\\
+\item  Go back to the starting branch and \textbf{merge} with the branch to be deleted.\\
 \begin{tt}
-git checkout master\\
-git merge topic/my\_new\_feature
+git checkout start\\
+git merge topic/feature
 \end{tt}
 
-\item  Delete the branch
-\begin{verbatim}
-# delete remote branch
-git remote prune my_new_feature
-git push origin :refs/heads/my_new_feature
-# delete localbranch
-git branch -D my_new_feature
-\end{verbatim}
-\end{itemize}
-
-
-\subsubsection{Use git rebase rather than git merge}
-
-\paragraph{Merging branches}
-
-Both commands gather the modifications realized in two branches.
-They differ in the way the blending is realized:
-\begin{itemize}
-\item The merge process consists in keeping the history of both branches and creating an additional commit entitled "Merge branch ..." that gathers the modifications of both branches.
-\item The rebase process consists in reapplying all the commits of the current branch after the last commit of the target branch. 
- For example:\\
+\item  Delete the branch\\
 \begin{tt}
-emmet@pc:\textasciitilde/work (devel): git rebase origin master\\
+$\#$ delete remote branch\\
+git remote prune feature\\
+git push origin :refs/heads/feature\\
+$\#$ delete local branch\\
+git branch -D feature
 \end{tt}
-will stack all the commits of the devel branch after the commits of the master branch.
-% This could be compared to the application of git cherry-pick on each commit of the current branch.
-\end{itemize}
+\end{enumerate}
 
+\begin{figure}[htb]
+\centering
+\includegraphics[scale=1]{img/life_and_death.eps}
+\caption{Life and death of a feature branch.}
+\label{fig:life-and-death}
+\end{figure}
 
-Note that after the rebase process, the initial branch will not exist anymore.
-If you are afraid of losing the initial branch (e.g. if one merge went wrong), do the rebase from a temporary branch\\
-\begin{tt}
-emmet@pc:\textasciitilde/work (devel): git checkout -b rebase-devel\\
-emmet@pc:\textasciitilde/work (rebase-devel): git rebase origin master
-\end{tt}\\
+%If required, check with the local authority.
 
-The advantage of the rebase process is to keep the history readable and more linear.
-As a consequence, browsing the history and debugging (using \begin{tt}git bisect\end{tt}) is simpler.
-In exchange, the initial history is rewritten (order of commit modified, commits squashed...).\\
-
-The advantage of the merge is that it keeps the original order of the commits.
-The main disadvantage is that the history graph will quickly grow into a bag knot, making debugging a nightmare, especially when several users develop on the same branch.
-Also, in case of conflict, the resulting commit is likely to be really obscure if some extra modifications have to be added.\\
-
-
-In order to have a more linear history, it is better to use \begin{tt}git rebase\end{tt}, especially for small differences (1 to 3 commits).\\
-
-\paragraph{Rebasing during branch update}
+\subsection{Rebasing during branch update}
 
 The rebase appends when one wants to gather two branches, but also during the update of a branch.
 When both the local and the remote repositories have been modified, the user has to update his
@@ -205,7 +270,7 @@ Note that to avoid (bad) surprises, you can do it in several steps:\\
 \item \begin{tt}git pull origin current\_branch\end{tt} ~~~
  \# do the merge: you can then check that everything went well.
 \item 
-\begin{tt}git rebase  origin master\end{tt}  ~~~
+\begin{tt}git rebase  origin/current\_branch\end{tt}  ~~~
  \# stack your modifications after those in the remote repository.
 \end{enumerate}
  
@@ -213,21 +278,64 @@ Also, the following commands can be of use:
 \begin{tt}git fetch \end{tt} checks if there are any modification of the remote repository.\\
 \begin{tt}git pull -ff-only \end{tt} pulls the remote modifications only if the pull is feed-forward (else fails).\\
 
-\paragraph{Cleaning up}
+
+
+
+\subsection{Cleaning up}
 
 Do not forget to clean the dead branches of the remote repository from time to time.
-\begin{verbatim}
-# Delete tracking branch
-git remote prune name_of_remote_branch
-# Pour supprimer une branche :
-git push origin :refs/heads/name_of_remote_branch
-\end{verbatim}
+\begin{tt}
+\# Delete tracking branch\\
+git remote prune name\_of\_remote\_branch\\
+\# Pour supprimer une branche :\\
+git push origin :refs/heads/name\_of\_remote\_branch
+\end{tt}
 
 % Remote repository interaction.
 % git pull, push, rebase.
 % Branch and pull
 % … take advantage of git stash.
 % Git submodule. Git ignore ?
+
+
+\subsection{Warning on git rebase}
+\label{section:rebase-warning}
+
+As explained earlier, the git rebase is a powerful tool enabling to have a clean history, which make the debugging easier. 
+However, when you rebase a branch, it is likely that its shape will differ of the shape of the corresponding branch on an remote repository. 
+As a consequence, it is forbidden to continue working with this remote branch, because of readability reasons.\\
+%As a result, it is now forbidden to push again the branch $B\_local$ on the branch $B\_remote$:
+%because of the change of history, it is now impossible to realize a push just after the rebase (the push is not straightforward). You will have to pull the remote branch, which will realize an automatic merge.
+%As a result, some commits will be present twice in the history, making it unreadable.
+
+
+
+The figure~\ref{fig:rebase-warning} illustrates the evolution of the local branch \textit{feature}, that is rebased on the branch \textit{start} and merged again with the remote branch \textit{origin/feature}.
+Before the rebase operation, the remote repository and the local repository are identical.
+We realize a \textit{git rebase start} on the branch feature: the commits of the branch feature are now placed after the commits of the branch \textit{start} (Figure~\ref{fig:rebase-warning}B).
+The content of the commits "K" and "L" are the same\footnote{For simplification reasons, let's assume that no conflict occurred during the rebase}, but their id are now different (illustrated by the change of color).\\
+
+Starting now, the remote branch and the local branch have a totally different structure. 
+Hence, it is not possible to push the branch feature on the remote branch (the push is not straightforward).
+In order to push on the remote branch, it would be necessary to update your local repository, that will create the tree illustrated in Figure~\ref{fig:rebase-warning}C. 
+As a result, the repository will contain the commits "K" and "L" twice, making the history unreadable.
+
+Since that without this discouraged merge process, it is no longer possible to communicate with the remote branch origin/feature, the best solution would now be to create a new remote branch with a different name (origin/feature2) or to merge the modification with the start branch (if it is the end of the branch cycle).
+
+
+\begin{figure}[htb]
+\centering
+\includegraphics[scale=1]{img/rebase-warning.eps}
+\caption{Wrong behavior: pulling a branch after rebasing it leads to the duplication of the history.}
+\label{fig:rebase-warning}
+\end{figure}
+
+
+
+
+
+
+
 
 \section{Structure of a GIT repository}
 The repository should follow the model proposed in \footnote{\url{http://nvie.com/posts/a-successful-git-branching-model/}}.
@@ -239,8 +347,8 @@ Here is a short summary:
 \paragraph{Main permanent branches}
 The repository should have two permanent branches:
 \begin{itemize}
-\item The \textit{develop} branch, that contains commits as small as possible. This branch gives the detailed history of all the modification that have been realized on the repository. 
-\item The \textit{master} branch, that contains released version only. They \textbf{must} work. The corresponding commits may be huge, since they correspond to squashes of commits that have been pushed in the develop branch.
+\item The \textit{master} branch, that contains commits as small as possible. This branch gives the detailed history of all the modification that have been realized on the repository. 
+\item The \textit{stable} branch, that contains released version only. They \textbf{must} work. The corresponding commits may be huge, since they correspond to squashes of commits that have been pushed in the develop branch.
 \end{itemize}
 
 \paragraph{Extra permanent branches}
@@ -250,12 +358,23 @@ Those repositories should be stored in the root of the git repository.
 \paragraph{Temporary branches}
 Next to those branches, other branches can be created for several reasons:
 \begin{itemize}
-\item Develop new features. At the end of the test process, the commits should be \textit{rebased} with the release branches.
+\item Develop new features. At the end of the test process, the commits \textit{must be rebased} with the release branches. Since the rebase can be tricky, please ask the code maintainer to do it if you are not familiar with this command.
 \item Develop a hotfix. Once done, that are merged with both the master and the develop branch. 
 %\item Develop a release. Once done, that are merged with both the master and the develop branch. 
 \end{itemize}
 
-\includepdf[pages={1}]{img/Git-branching-model.pdf}
+\paragraph{Bug fixes}
+Bug fixes can be cherry­picked into the stable branch.
+
+
+
+\begin{figure}
+\includegraphics[width=0.95\columnwidth]{img/Git-branching-model.eps}
+\end{figure}
+
+
+
+%\includepdf[pages={1}]{img/Git-branching-model.pdf}
 
 %\paragraph{Rebasing huge branches}
 %\note{Robohow fellows: I'd like your opinion on the following issue:}
@@ -290,22 +409,9 @@ Thus, the main developers will be able to directly apply your patches using the 
 This will create a file that is not directly usable, and the developers will have to recode your modifications.
 
 \paragraph{Using others' packages}
-Prefer working with tagged versions, that are more likely to be stable, and are better reference points.
+Prefer working with stable branches or tagged versions, that are more likely to be stable, and are better reference points.
 
 
-\section{Forbidden practices}
-Briefly, it is forbidden to modify a commit that has already been pushed. 
-Such operations are likely to damage the remote repository and/or the repository of other users.
-In particular, the following practices should be prohibited: 
-\begin{itemize}
-\item Forcing a push. Never use the command \begin{tt}{git push -f}\end{tt}
-\item Changing a commit after pushing it. Once pushed, it is too late to do a \begin{tt}{git commit –amend}\end{tt}
-\item Rebasing a branch that you pushed, or that you pulled from another person. 
-Rebasing published branches can lead to duplicate commits in the shared repository.
-\end{itemize}
-
-The only exception to these rules is when a file that should not been distributed has been pushed (file containing a password, sensitive informations \ldots).
-In this case, you can destroy the wrong commit by using \begin{tt}push -f\end{tt} and/or contacting the main person in charge of the code to explain what happened.
 
 \section{Sources}
 

@@ -1,10 +1,13 @@
 \chapter{ROS guidelines}
 
+The ROS version to be used is the \textbf{ROS Groovy} version (released in January 2013).\\
+
+
 The following rules are a copy of the slides created by Lorenz M\"osenlechner \footnote{\url{https://robohow.org/_media/meetings/first-integration-workshop/ros-best-practices.pdf}}.\\
 
 The ROS libraries are by default installed in the /opt/ros folder. 
-\textbf{Never} edit those files. Prefer using ROS overlays \footnote{\url{http://www.ros.org/wiki/fuerte/Installation/Overlays}} instead.
-Use the tool support \textit{rosws} to create, modify and manage overlays.
+\textbf{Never} edit those files. Prefer using ROS overlays \footnote{\url{http://www.ros.org/wiki/fuerte/Installation/Overlays}} instead, 
+and use the tool support \textit{rosws} to create, modify and manage overlays.
 Multiple overlays with different versions can exist in parallel, e.g.:
 \begin{itemize}
 \item Overlay for development.
@@ -14,32 +17,32 @@ Multiple overlays with different versions can exist in parallel, e.g.:
 
 \section{ROS Overlays}
 \paragraph{Creation}
-The creation of an overlay with rosws is realized as follows:
-\begin{verbatim}
-sudo pip install rosinstall #Install rosws
-rosws init ~/fuerte /opt/ros/fuerte # Create a new overlay
-# Load the created file setup.bash in .bashrc (optional)
-# echo "source ~/fuerte/setup.bash" >> ~/.bashrc 
-\end{verbatim}
+The creation of an overlay with rosws is realized as follows:\\
+\begin{tt}
+sudo apt-­get install python-rosinstall\\
+rosws init \textasciitilde/fuerte /opt/ros/fuerte \# Create a new overlay\\
+\# Load the created file setup.bash in .bashrc (optional)\\
+\# echo "source \textasciitilde/fuerte/setup.bash" >> \textasciitilde/.bashrc \\
+\end{tt}
 
 \paragraph{Add packages}
-To add a local directory (e.g. a sandbox for experimental packages), do:
-\begin{verbatim}
-mkdir ~/fuerte/sandbox
-rosws set ~/fuerte/sandbox
-\end{verbatim}
+To add a local directory (e.g. a sandbox for experimental packages), do:\\
+\begin{tt}
+mkdir \textasciitilde/fuerte/sandbox\\
+rosws set \textasciitilde/fuerte/sandbox\\
+\end{tt}
 
 \paragraph{Installation}
-Install packages from a rosinstall file:
-\begin{verbatim}
-rosws merge robohow-cram.rosinstall
+Install packages from a rosinstall file:\\
+\begin{tt}
+rosws merge robohow-cram.rosinstall\\
+rosws update\\
+\end{tt}
+Install a (released) stack from source:\\
+\begin{tt}
+roslocate info turtlebot | rosws merge -\\
 rosws update
-\end{verbatim}
-Install a (released) stack from source:
-\begin{verbatim}
-roslocate info turtlebot | rosws merge -
-rosws update
-\end{verbatim}
+\end{tt}
 
 The rosinstall files correspond to a YAML description of repositories to install.
 They are ideal for repository snap shots and collaboration, and enable to specify versions, e.g:
@@ -71,7 +74,7 @@ They are ideal for repository snap shots and collaboration, and enable to specif
 \item Use ros::NodeHandle handle("\textasciitilde")\\
 \begin{tabular}{ll}
 \textbf{Bad} & \textbf{Good}\\
-ros::NodeHandle nh();         & ros::NodeHandle nh("\textasciitilde");\\
+ros::NodeHandle nh;         & ros::NodeHandle nh("\textasciitilde");\\
 nh.advertise$<$Foo$>$("foo", 10); & nh.advertise$<$Foo$>$("foo", 10);\\
 Topics: $\rightarrow$ /foo &
 Topics: $\rightarrow$ /node\_name/foo
@@ -134,12 +137,21 @@ package that downloads and compiles the package.
 % Create tags for stable versions that others can use.
 \begin{itemize}
 \item Provide a rosinstall file.
-\item Create a short Wiki page for each package:
+\item Create a short Wiki page for each package
 \item Document what the node does.
 \item Document topics, services and actions that are required and
 provided.
 \item Document ROS parameters and their default values.
 \item Data can be recorded and exchanged using bag files.
+\end{itemize}
+
+\section{Relase of the software}
+
+To realize a release of your software, it is mandatory to 
+\begin{itemize}
+\item Test your software using willowgarage buildfarm (see \url{http://www.ros.org/wiki/regression_tests} for more details).
+\item Use the ros release system \url{http://www.ros.org/wiki/release}.
+It will creates the binary deb and the source deb (repackaged tarball of the source) for you. 
 \end{itemize}
 
 \section{ROS Bag Files}

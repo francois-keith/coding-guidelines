@@ -1,21 +1,22 @@
-This document will detail some rules for future developed code.
+This document details some rules for future developed code.
 Keep in mind that the code will be read by humans and will be eventually modified by them (you may not be the last person to use it). 
 It must be readable, understandable and reusable.\\
 
 The most important rule about coding is the \textbf{consistency}.
-Hence, ifa project already has its own format, do not impose yours, and try to adapt yourself.
+Hence, if a project already has its own format, do not impose yours, and try to adapt yourself.
 There are several reasons for that:
 \begin{itemize}
 \item Correcting everything will take you a long time that you may not have
-\item If you are a visitor/occasional developer of a package, you may signal to the main developers that some rules have been broken. But don't do it by yourself, temporarily mixing two coding styles is not a good thing to do.
+\item Temporarily mixing two coding styles is not a good thing to do.
 \end{itemize}
+Hence, if you are a visitor/occasional developer of a package, you may signal to the main developers that some rules have been broken. But don't do it by yourself, 
 Prefer asserting the consistency inside one package rather than the consistency inside the whole project.
-However, if you are creating a new package, please follow those coding guidelines.
+However, when creating a new package, please follow those coding guidelines.
 
 \chapter{General guidelines}
 \label{section:general-guidelines}
-\begin{itemize}
-\item Ensure the consistency of each project (this is \textit{that} important).
+\begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
+\item Ensure the consistency of each project (this is \textbf{\textit{that}} important).
 \item Maintain the documentation up-to-date (use doxygen, sphinx...), and make your code understandable.
 \item Make the validation of the code easier by adding unit-tests.
 \item Use versioning tools (git or svn, depending on the type of data), tag versions that work and release often.
@@ -24,11 +25,18 @@ However, if you are creating a new package, please follow those coding guideline
 \end{itemize}
 
 \section{General shape of package}
-A package should at least contain the following elements:
-%The general shape of a package is as follow:
-%General shape of packages (like, a Readme, folder structure - include - src ...)
-\paragraph{Readme.md}
-The readme.md file is the first file a newcomer will consult. 
+
+All packages must contain the same information (author list, description, copyright\ldots), but depending on the type of package 
+(generic package or ROS package), those informations will be detailed in different locations.
+
+
+\subsection{Generic package}
+Packages independent from ROS should at least contain the following elements:
+
+\paragraph{README(.md)}
+The README(.md) file is the first file a newcomer will consult. 
+The .md extension should be added if you use markdown to make the reading of the file easier.
+
 It should define all the informations relative to the project:
 \begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
 \item The purpose of the package.
@@ -37,11 +45,38 @@ It should define all the informations relative to the project:
 \item The origin of the sources, and the project management web application (github, redmine \ldots) 
 \end{itemize}
 
+It is important to detail on which OS the code has been tested, especially for C++.
+While using cmake and avoiding OS specific code or header inclusion are good practices, 
+they do not automatically ensure the compatibility between the platforms. 
+For example, on windows systems, there are some additional routines to export the symbols of the libraries.
+On Mac OS, the linkage verification is stricter than on ubuntu (where the linkage can be solved at the compilation).
+Also, the double precision handling may be different between 64 bits and 32 bits systems, which can also modify the behavior of a program.
+
+The purpose is mainly to say to users that there are no maintainers for some OS, and that they will be on their own if they want to port the code.
+
 \paragraph{Authors}
 The list of contributing authors can be added at the top of each files.
 The order to keep is the alphabetical order of last name, then first name.
 
 Since this can be a daunting task, an alternative is to define an AUTHOR file in the root directory of your package, in which you can indicate the corresponding(s) author(s) and list all the contributors and a summed up detail of their contribution.\\
+
+To simply list the contributors, you can use the following script:
+\begin{verbatim}
+#!/bin/sh
+# Source: http://goo.gl/Y4UWR
+set -e
+
+# Get a list of authors ordered by number of commits
+# and remove the commit count column
+AUTHORS=$(git --no-pager shortlog -nse | cut -f 2-)
+if [ -z "$AUTHORS" ] ; then
+    echo "Authors list was empty"
+    exit 1
+fi
+
+# Display the authors list and write it to the file
+echo "$AUTHORS" | tee "$(git rev-parse --show-toplevel)/AUTHORS"
+\end{verbatim}
 
 \paragraph{Copyright}
 The full text statements of all licenses used in the project should be placed in the LICENSES directory at the top of the repository.
@@ -49,13 +84,51 @@ If you add a package under a license that is not included in LICENSES, add the l
 
 The code developed in the frame of the robohow project should be open source.
 The licenses used in this purpose are the following ones (from the more restrictive to the least one).
-\begin{itemize}
+\begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
 \item GPL\footnote{\url{http://www.gnu.org/licenses/gpl.html}}, permits the use of the library only for free programs.
 \item LGPL\footnote{\url{http://www.gnu.org/copyleft/lesser.html}} permits the use of the library in proprietary programs.
 \item BSD \footnote{\url{http://opensource.org/licenses/BSD-3-Clause}}
 \end{itemize}
 
+\subsection{ROS package}
+The organization of a ROS package is slightly different from a generic package, since
+more informations are gathered in the ROS specific files manifest.xml and stack.xml.
+Hence ROS packages should at least contain the following elements:
+\paragraph{manifest.xml or stack.xml}
+The manifest.xml (for a package) / stack.xml (for a stack) files should detail the following informations:
+\begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
+\item Author list
+\item Description
+\item License
+\item Url of the project.
+\end{itemize}
+
+As a result, please \textbf{DO NOT} create files such as AUTHOR, in order to avoid inconsistencies with the manifest.xml file.
+
+\paragraph{README(.md)}
+Since the description of the package is now in the manifest/stack files, the README file now contains less informations:
+\begin{itemize}[noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt]
+\item The use/compilation informations: on which OS does it work? What are the dependencies of the project (with the version if it matters).
+\item The related papers.
+\end{itemize}
+
+
 % According to ROS guidelines\url{http://www.ros.org/wiki/DevelopersGuide}
+\section{File convention}
+
+
+\subsection{Line endings}
+All text files must be normalized so that lines terminate in the unix style (LF).
+Mixture of termination styles will sooner or later create an issue in the versioning tool when the end-of-line character will change, and make the history unusable.
+Hence, avoid committing files that terminate in CRLF (windows ending) or CR (mac ending) since such a modification is likely to appear as a whole-file modification.
+
+\subsection{Naming convention}
+The names of the files should be in ascii, lower case, without space or numbers.
+The worst thing you could do is to have two files with the same name but with a different case: 
+this leads to severe subversion issues on windows systems (one of the file erase the other automatically at the checkout of the repository).
+
+Also, please avoid too long lines in the source code: respecting a maximum of 80 chars per line is good rule of thumb.
+
 
 \section{Clarify and document your code}
 Keep in mind that your code will be read, reused and (eventually) improved by humans.
@@ -69,7 +142,7 @@ Do not hesitate to detail any specific or unusual implementation
 (e.g. the use of the specific structure of a sparse matrix to gain computation time).
 Similarly, document your variables: units, specific bounds, legal values and give them \textit{explicit} names (avoid \begin{tt}tmp\end{tt} or random sequence of letters).	
 
-Please refer to the articles corresponding to the code, \textit{especially} if the notations come from it.
+Please refer to the articles corresponding to the code, \textit{especially} if the notations come from them.
 
 Yet, do not overload your code by documenting the obvious. This can be avoided:\\
 \begin{tt} i+=1 //increase the index value of 1\end{tt}
@@ -88,7 +161,7 @@ Similarly, the more automatized it is, the better.
 \item Do memory handling tests (valgrind).
 \end{itemize}
 
-Automatize your tests using cTest or gtest\footnote{\url{http://www.ros.org/wiki/gtest}}.
+Automatize your tests using ctest or gtest\footnote{\url{http://www.ros.org/wiki/gtest}}.
 
 \section{Bug tracking - bug report}
 Eventually, you'll encounter some issues using code developed by someone else.\\
@@ -112,6 +185,7 @@ You can help someone by doing this, especially when there are reasons not to imp
 \section{Deprecation}
 As soon as there are users of your code, you have a responsibility not to pull the rug out from under them with sudden breaking changes. 
 Instead, use a process of deprecation, which means marking a feature or component as being no longer supported, with a schedule for its removal. Give users time to adapt, which is usually one release cycle, then do the removal.
+Similarly, be thoughtful if you plan to change the ABI of your program. 
 
 %Deprecation can happen at multiple levels, including:
 %

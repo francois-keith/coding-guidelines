@@ -5,7 +5,7 @@
 
 The integration in ROS is one possible objective of the code.
 As a result,  the first guidelines proposed are those of ROS.
-However, please be aware that this integration is not mandatory: one can wants its code to be used outside of the ROS framework and independently from any middleware.
+However, please be aware that this integration is not mandatory: one can want its code to be used outside of the ROS framework and independently from any middleware.
 
 %However, keep in mind maintaining that the consistency of code style in each package has priority above all other consideration.
 %Follow this guide whenever possible, e.g. when creating a new package, but if you are editing a package written by someone else, follow the existing stylistic conventions in that package.
@@ -118,7 +118,8 @@ Do not throw exceptions from destructors.\\
 Do not throw exceptions from callbacks that you do not invoke directly.\\
 
 
-When your code can be interrupted by exceptions, you must ensure that resources you hold will be deallocated when stack variables go out of scope. In particular, mutexes must be released, and heap-allocated memory must be freed. Accomplish this safety by using the following mutex guards and smart pointers:
+When your code can be interrupted by exceptions, you must ensure that resources you hold will be deallocated when stack variables go out of scope. In particular, mutexes must be released, and heap-allocated memory must be freed. 
+Accomplish this safety by using smart pointers.
 
 \paragraph{Forbidden practices}~\\
 Do NOT ignore warnings. If some warnings are way too verbose (e.g. boost on windows), silent them one by one.
@@ -228,10 +229,10 @@ google: \url{http://google-styleguide.googlecode.com/svn/trunk/pyguide.html}
 For now, the models of the robots are provided under the xml ros format. % \url{ref necessary}.
 No official guidelines have been made so far for mobile robots.
 
-A Ros Enhancement Proposal is pending on for mobile robots\footnote{\url{http://www.ros.org/reps/rep-0105.html}} 
+Ros Enhancement Proposals are active for mobile robots\footnote{\url{http://www.ros.org/reps/rep-0105.html}} 
 and humanoid robots\footnote{\url{http://www.ros.org/reps/rep-0120.html}}
 (that provides extra information on vision, feet).
-This style will be adopted to write the models of the humanoids (especially for Romeo).
+These style should be adopted to write the models of robots and humanoid robots (especially for Romeo).
 
 
 \section{CMake}
